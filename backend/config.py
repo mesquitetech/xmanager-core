@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from typing import Dict
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import Optional
 
 def validate_env_vars():
@@ -41,6 +41,15 @@ def database_url():
 
 class Settings(BaseSettings):
     DATABASE_URL: str = database_url()
+
+    @field_validator('DATABASE_URL')
+    @classmethod
+    def clean_database_url(cls, v: str) -> str:
+        v = v.strip('"\'')
+        if v.startswith("postgres://"):
+            v = "postgresql://" + v[len("postgres://"):]
+        return v
+
     # JWT settings
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-for-jwt")
     ALGORITHM: str = "HS256"
