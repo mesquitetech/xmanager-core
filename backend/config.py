@@ -23,6 +23,8 @@ validate_env_vars()
 def database_url():
     url = os.getenv("DATABASE_URL")
     if url:
+        # Strip surrounding quotes if the value was stored with them
+        url = url.strip('"\'')
         # SQLAlchemy 2.x requires postgresql:// not postgres://
         if url.startswith("postgres://"):
             url = "postgresql://" + url[len("postgres://"):]
