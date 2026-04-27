@@ -20,4 +20,11 @@ except Exception as _e:
 
     @app.get("/api/health")
     def health():
-        return {"status": "import_failed", "error": _import_error, "traceback": _import_tb}
+        import os
+        db_url = os.getenv("DATABASE_URL", "")
+        return {
+            "status": "import_failed",
+            "error": _import_error,
+            "traceback": _import_tb,
+            "db_url_prefix": db_url[:30] if db_url else "(not set)",
+        }
