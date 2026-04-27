@@ -23,6 +23,9 @@ validate_env_vars()
 def database_url():
     url = os.getenv("DATABASE_URL")
     if url:
+        # SQLAlchemy 2.x requires postgresql:// not postgres://
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[len("postgres://"):]
         if os.getenv('VERCEL'):
             print("Ejecutándose en Vercel")
         elif os.getenv('REPLIT_DEPLOYMENT'):
