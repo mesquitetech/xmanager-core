@@ -14,3 +14,4 @@ build/
 uploads/
 backend/uploads/
 backend/static/
+.vercel
